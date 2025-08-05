@@ -1,9 +1,9 @@
 import app from './app';
+import env from './config/env';
 
-const PORT = process.env.PORT || 3001;
+const PORT = env.PORT;
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Server listening on port ${PORT}`);
 });
-
