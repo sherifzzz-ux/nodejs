@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id                Int                 @id @default(autoincrement())
+  email             String              @unique
+  name              String?
+  quotationRequests QuotationRequest[]
+  messages          Message[]
+}
+
+model Machine {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  serialNumber      String              @unique
+  quotationRequests QuotationRequest[]
+}
+
+model Project {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  quotationRequests QuotationRequest[]
+}
+
+model QuotationRequest {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  machine    Machine  @relation(fields: [machineId], references: [id])
+  machineId  Int
+  project    Project? @relation(fields: [projectId], references: [id])
+  projectId  Int?
+  messages   Message[]
+}
+
+model Message {
+  id                Int      @id @default(autoincrement())
+  content           String
+  createdAt         DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id])
+  userId            Int
+  quotationRequest  QuotationRequest @relation(fields: [quotationRequestId], references: [id])
+  quotationRequestId Int
+}
