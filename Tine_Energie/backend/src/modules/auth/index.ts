@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { JwtPayload } from '../../types';
 
 interface User {
   id: number;
@@ -40,8 +41,9 @@ router.post('/login', async (req, res) => {
   if (!match) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
+  const payload: JwtPayload = { id: user.id, role: user.role };
   const token = jwt.sign(
-    { id: user.id, role: user.role },
+    payload,
     process.env.JWT_SECRET || 'secret',
     { expiresIn: '1h' },
   );

@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { JwtPayload } from '../types';
 
-interface AuthRequest extends Request {
-  user?: any;
+export interface AuthRequest extends Request {
+  user?: JwtPayload;
 }
 
 export function auth(req: AuthRequest, res: Response, next: NextFunction) {
@@ -12,7 +13,7 @@ export function auth(req: AuthRequest, res: Response, next: NextFunction) {
   }
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as JwtPayload;
     req.user = decoded;
     return next();
   } catch (err) {
