@@ -8,10 +8,14 @@ interface AuthRequest extends Request {
 
 export function auth(req: AuthRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Token required' });
   }
+
   const token = authHeader.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'Token required' });
+  }
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET);
     req.user = decoded;
