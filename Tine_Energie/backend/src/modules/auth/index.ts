@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import env from '../../config/env';
 
 interface User {
   id: number;
@@ -42,7 +43,7 @@ router.post('/login', async (req, res) => {
   }
   const token = jwt.sign(
     { id: user.id, role: user.role },
-    process.env.JWT_SECRET || 'secret',
+    env.JWT_SECRET,
     { expiresIn: '1h' },
   );
   return res.json({ token });

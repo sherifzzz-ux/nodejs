@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import env from '../config/env';
 
 interface AuthRequest extends Request {
   user?: any;
@@ -12,7 +13,7 @@ export function auth(req: AuthRequest, res: Response, next: NextFunction) {
   }
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const decoded = jwt.verify(token, env.JWT_SECRET);
     req.user = decoded;
     return next();
   } catch (err) {
